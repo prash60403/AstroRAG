@@ -1,6 +1,10 @@
 import logging
 
-from crewai.tools import tool
+try:
+    from crewai.tools import tool
+except ModuleNotFoundError:
+    def tool(func):
+        return func
 from llama_index.core import VectorStoreIndex, StorageContext
 from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
@@ -70,7 +74,8 @@ def rag_query_tool(query: str) -> dict:
     return {"answer": response.response,
             "source_files": list(source_file_names)}
 
-output = rag_query_tool(query="Explain Ecosystem and Evolution.")
-print(output)
-print(output["answer"])
-print(output["source_files"])
+if __name__ == "__main__":
+    output = rag_query_tool(query="Explain Ecosystem and Evolution.")
+    print(output)
+    print(output["answer"])
+    print(output["source_files"])
